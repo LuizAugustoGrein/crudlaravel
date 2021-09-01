@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -18,7 +17,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
+    
     <style>
         .btn-group-sm>.btn, .btn-sm {
             padding: .1rem .5rem;
@@ -31,7 +30,7 @@
         body {
             font-family: "Nunito", sans-serif;
             font-size: 0.9rem;
-            background-color: #f8fafc;
+            background-color: lightgray;
         }
     </style>
     @stack('css')
