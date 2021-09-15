@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Consulta;
 use Illuminate\Http\Request;
+use App\Consulta;
+use App\Medico;
+use App\Paciente;
 
 class ConsultaController extends Controller
 {
@@ -14,7 +16,11 @@ class ConsultaController extends Controller
      */
     public function index()
     {
-        //
+        // obtendo os dados de todos as consultas
+        $consultas = Consulta::all();
+        // chamando a tela e enviando o objeto $consultas
+        // como parâmetro
+        return view('consultas.index', compact('consultas'));
     }
 
     /**
@@ -24,7 +30,12 @@ class ConsultaController extends Controller
      */
     public function create()
     {
-        //
+        //obtendo todos os pacientes
+        $pacientes = Paciente::pluck('nome','id');
+        //obtendo todos os medicos
+        $medicos = Medico::pluck('nome','id');
+        // chamando a tela para o cadastro de consultas
+        return view ('consultas.create', compact('pacientes','medicos'));
     }
 
     /**
@@ -35,7 +46,18 @@ class ConsultaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // criando regras para validação
+        $validateData = $request->validate([
+            'paciente_id'      =>      'required|max:35',
+            'medico_id'        =>      'required|max:35',
+            'data'             =>      'required|max:35',
+            'hora'             =>      'required|max:35'
+        ]);
+        // executando o método para a gravação do registro
+        $consulta = Consulta::create($validateData);
+        // redirecionando para a tela principal do módulo
+        // de consultas
+        return redirect('/consultas')->with('success','Dados adicionados com sucesso!');
     }
 
     /**
@@ -44,9 +66,14 @@ class ConsultaController extends Controller
      * @param  \App\Consulta  $consulta
      * @return \Illuminate\Http\Response
      */
-    public function show(Consulta $consulta)
+    public function show($id)
     {
-        //
+        // criando um objeto para receber o resultado
+        // da busca de registro/objeto específico
+        $consulta = Consulta::findOrFail($id);
+        // retornando a tela de visualização com o
+        // objeto recuperado
+        return view('consultas.show',compact('consulta'));
     }
 
     /**
@@ -55,9 +82,14 @@ class ConsultaController extends Controller
      * @param  \App\Consulta  $consulta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Consulta $consulta)
+    public function edit($id)
     {
-        //
+        // criando um objeto para receber o resultado
+        // da busca de registro/objeto específico
+        $consulta = Consulta::findOrFail($id);
+        // retornando a tela de edição com o
+        // objeto recuperado
+        return view('consultas.edit', compact('consulta'));
     }
 
     /**
@@ -67,9 +99,22 @@ class ConsultaController extends Controller
      * @param  \App\Consulta  $consulta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Consulta $consulta)
+    public function update(Request $request, $id)
     {
-        //
+        // criando um objeto para testar/aplicar 
+        // validações nos dados da requisição
+        $validateData = $request->validate([
+            'paciente_id'      =>      'required|max:35',
+            'medico_id'        =>      'required|max:35',
+            'data'             =>      'required|max:35',
+            'hora'             =>      'required|max:35'
+        ]);
+        // criando um objeto para receber o resultado
+        // da persistência (atualização) dos dados validados 
+        Consulta::whereId($id)->update($validateData);
+        // redirecionando para o diretório raiz (index)
+        return redirect('/consultas')->with('success', 
+        'Dados atualizados com sucesso!');
     }
 
     /**
@@ -78,8 +123,14 @@ class ConsultaController extends Controller
      * @param  \App\Consulta  $consulta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Consulta $consulta)
+    public function destroy($id)
     {
-        //
+        // localizando o objeto que será excluído
+        $consulta = Consulta::findOrFail($id);
+        // realizando a exclusão
+        $consulta->delete();
+        // redirecionando para o diretório raiz (index)
+        return redirect('/consultas')->with('success', 
+        'Dados removidos com sucesso!');
     }
 }

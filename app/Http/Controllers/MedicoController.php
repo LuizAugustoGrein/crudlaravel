@@ -14,7 +14,11 @@ class MedicoController extends Controller
      */
     public function index()
     {
-        //
+        // obtendo os dados de todos os medicos
+        $medicos = Medico::all();
+        // chamando a tela e enviando o objeto $medicos
+        // como parâmetro
+        return view('medicos.index', compact('medicos'));
     }
 
     /**
@@ -24,7 +28,8 @@ class MedicoController extends Controller
      */
     public function create()
     {
-        //
+        // chamando a tela para o cadastro de medicos
+        return view ('medicos.create');
     }
 
     /**
@@ -35,7 +40,16 @@ class MedicoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // criando regras para validação
+        $validateData = $request->validate([
+            'nome'      =>      'required|max:35',
+            'crm'       =>      'required|max:35'
+        ]);
+        // executando o método para a gravação do registro
+        $medico = Medico::create($validateData);
+        // redirecionando para a tela principal do módulo
+        // de medicos
+        return redirect('/medicos')->with('success','Dados adicionados com sucesso!');
     }
 
     /**
@@ -44,9 +58,14 @@ class MedicoController extends Controller
      * @param  \App\Medico  $medico
      * @return \Illuminate\Http\Response
      */
-    public function show(Medico $medico)
+    public function show($id)
     {
-        //
+        // criando um objeto para receber o resultado
+        // da busca de registro/objeto específico
+        $medico = Medico::findOrFail($id);
+        // retornando a tela de visualização com o
+        // objeto recuperado
+        return view('medicos.show',compact('medico'));
     }
 
     /**
@@ -55,9 +74,14 @@ class MedicoController extends Controller
      * @param  \App\Medico  $medico
      * @return \Illuminate\Http\Response
      */
-    public function edit(Medico $medico)
+    public function edit($id)
     {
-        //
+        // criando um objeto para receber o resultado
+        // da busca de registro/objeto específico
+        $medico = Medico::findOrFail($id);
+        // retornando a tela de edição com o
+        // objeto recuperado
+        return view('medicos.edit', compact('medico'));
     }
 
     /**
@@ -67,9 +91,20 @@ class MedicoController extends Controller
      * @param  \App\Medico  $medico
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Medico $medico)
+    public function update(Request $request, $id)
     {
-        //
+        // criando um objeto para testar/aplicar 
+        // validações nos dados da requisição
+        $validateData = $request->validate([
+            'nome'      =>      'required|max:35',
+            'crm'       =>      'required|max:35'
+        ]);
+        // criando um objeto para receber o resultado
+        // da persistência (atualização) dos dados validados 
+        Medico::whereId($id)->update($validateData);
+        // redirecionando para o diretório raiz (index)
+        return redirect('/medicos')->with('success', 
+        'Dados atualizados com sucesso!');
     }
 
     /**
@@ -78,8 +113,14 @@ class MedicoController extends Controller
      * @param  \App\Medico  $medico
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Medico $medico)
+    public function destroy($id)
     {
-        //
+        // localizando o objeto que será excluído
+        $medico = Medico::findOrFail($id);
+        // realizando a exclusão
+        $medico->delete();
+        // redirecionando para o diretório raiz (index)
+        return redirect('/medicos')->with('success', 
+        'Dados removidos com sucesso!');
     }
 }

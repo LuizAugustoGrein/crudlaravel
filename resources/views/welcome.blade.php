@@ -81,7 +81,10 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    CRUD Clínica
+                    <p>CRUD Clínica</p>
+                    <a style="font-size: 40px; text-decoration: none;" href="/pacientes">Pacientes</a>
+                    <a style="font-size: 40px; text-decoration: none;" href="/medicos">Médicos</a>
+                    <a style="font-size: 40px; text-decoration: none;" href="/consultas">Consultas</a>
                 </div>
             </div>
         </div>
